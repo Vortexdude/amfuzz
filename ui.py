@@ -1,7 +1,7 @@
 from settings import *
 import darkdetect
 import customtkinter as ctk
-from buttons import Button
+from buttons import Button, NumButton
 
 class Calculator(ctk.CTk):
     def __init__(self, isdark: bool):
@@ -17,8 +17,10 @@ class Calculator(ctk.CTk):
         self.title(APP_TITLE)
         self.rowconfigure(list(range(MAIN_ROWS)), weight=1, uniform='a')
         self.columnconfigure(list(range(MAIN_COLUMNS)), weight=1, uniform='a')
-        self.formula_sring: str = ctk.StringVar(value='0') #setting the string variable for label
-        self.result_string: str = ctk.StringVar(value='test')
+
+        #data
+        self.result_string: str = ctk.StringVar(value='0')
+        self.formula_sring: str = ctk.StringVar(value='') #setting the string variable for label
 
         # widgets
         self.create_widget()
@@ -41,7 +43,28 @@ class Calculator(ctk.CTk):
         )
 
         # percent button
+        Button(
+            parent=self,
+            func=self.percent,
+            text=OPERATORS['percent']['text'],
+            row=OPERATORS['percent']['row'],
+            col=OPERATORS['percent']['col'],
+            font=main_font
+        )
 
+        for num, data in NUM_POSITIONS.items():
+            NumButton(
+                parent=self,
+                text=num,
+                func=lambda: print(num),
+                row=data['row'],
+                col=data['col'],
+                font=main_font,
+                span=data['span']
+            )
+
+    def percent(self):
+        print("Getting The Percent")
 
     def clear(self):
         print("Clearing the screen !")
