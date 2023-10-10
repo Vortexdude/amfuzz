@@ -1,7 +1,8 @@
+from shlex import join
 from settings import *
 import darkdetect
 import customtkinter as ctk
-from buttons import Button, NumButton
+from buttons import Button, NumButton, OperationButton
 
 class Calculator(ctk.CTk):
     def __init__(self, isdark: bool):
@@ -21,6 +22,7 @@ class Calculator(ctk.CTk):
         #data
         self.result_string: str = ctk.StringVar(value='0')
         self.formula_sring: str = ctk.StringVar(value='') #setting the string variable for label
+        self.display_nums = []
 
         # widgets
         self.create_widget()
@@ -28,9 +30,9 @@ class Calculator(ctk.CTk):
 
     def create_widget(self):
         main_font = ctk.CTkFont(family=FONT, size=NORMAL_FONT_SIZE)
-        resul_font = ctk.CTkFont(family=FONT, size=OUTPUT_FONT_SIZE)
-        OutputLabel(self, 0, 'SE', main_font, self.result_string)
-        OutputLabel(self, 1, 'E', resul_font, self.formula_sring)
+        result_font = ctk.CTkFont(family=FONT, size=OUTPUT_FONT_SIZE)
+        OutputLabel(self, 1, 'E', result_font, self.result_string)
+        OutputLabel(self, 0, 'SE', main_font, self.formula_sring)
 
         # AC button
         Button(
@@ -56,18 +58,38 @@ class Calculator(ctk.CTk):
             NumButton(
                 parent=self,
                 text=num,
-                func=lambda: print(num),
+                func=self.num_press,
                 row=data['row'],
                 col=data['col'],
                 font=main_font,
                 span=data['span']
             )
 
+        for opetation, data in MATH_POSITIONS.items():
+            OperationButton(
+                parent=self,
+                operation=data['operator'],
+                text=data['character'],
+                func=self.meth_press,
+                row=data['row'],
+                col=data['col'],
+                font=main_font
+            )
+
+    def num_press(self, value):
+        self.display_nums.append(str(value))
+        self.result_string.set(''.join(self.display_nums))
+
+    def meth_press(self, value):
+        # current_number = ''.join(self.)
+        pass
+
     def percent(self):
         print("Getting The Percent")
 
     def clear(self):
-        print("Clearing the screen !")
+        self.display_nums = []
+        self.result_string.set("")
 
 
 class OutputLabel(ctk.CTkLabel):

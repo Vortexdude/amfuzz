@@ -8,8 +8,8 @@ MAIN_COLUMNS = 4
 
 #font
 FONT = 'Helvetica'
-OUTPUT_FONT_SIZE = 70
-NORMAL_FONT_SIZE = 32
+OUTPUT_FONT_SIZE = 60
+NORMAL_FONT_SIZE = 25
 
 STYLING = {
     'gap': 0.5,
@@ -20,6 +20,15 @@ OPERATORS = {
     'clear': {"col": 0, 'row': 2, 'text': "AC"},
     'percent': {'col': 2, 'row': 2, 'text': '%'}
 }
+
+MATH_POSITIONS = {
+    '/': {'col': 3, 'row': 2, 'character': '÷', 'operator': '/'},
+    '*': {'col': 3, 'row': 3, 'character': 'x', 'operator': '*'},
+    '-': {'col': 3, 'row': 4, 'character': '-', 'operator': '-'},
+    '+': {'col': 3, 'row': 5, 'character': '+', 'operator': '+'},
+    '=': {'col': 3, 'row': 6, 'character': '=', 'operator': '='}
+}
+
 
 COLORS = {
     'light-grey': {'fg': ('#505050', '#D4D4D2'), 'hover': ('#686868', '#efefed'), 'text': ('white', 'black')},
