@@ -20,9 +20,10 @@ class Calculator(ctk.CTk):
         self.columnconfigure(list(range(MAIN_COLUMNS)), weight=1, uniform='a')
 
         #data
-        self.result_string: str = ctk.StringVar(value='0')
-        self.formula_sring: str = ctk.StringVar(value='') #setting the string variable for label
+        self.result_string = ctk.StringVar(value='0')
+        self.formula_string = ctk.StringVar(value='') #setting the string variable for label
         self.display_nums = []
+        self.full_operation = []
 
         # widgets
         self.create_widget()
@@ -32,7 +33,7 @@ class Calculator(ctk.CTk):
         main_font = ctk.CTkFont(family=FONT, size=NORMAL_FONT_SIZE)
         result_font = ctk.CTkFont(family=FONT, size=OUTPUT_FONT_SIZE)
         OutputLabel(self, 1, 'E', result_font, self.result_string)
-        OutputLabel(self, 0, 'SE', main_font, self.formula_sring)
+        OutputLabel(self, 0, 'SE', main_font, self.formula_string)
 
         # AC button
         Button(
@@ -70,7 +71,7 @@ class Calculator(ctk.CTk):
                 parent=self,
                 operation=data['operator'],
                 text=data['character'],
-                func=self.meth_press,
+                func=self.math_press,
                 row=data['row'],
                 col=data['col'],
                 font=main_font
@@ -80,16 +81,55 @@ class Calculator(ctk.CTk):
         self.display_nums.append(str(value))
         self.result_string.set(''.join(self.display_nums))
 
-    def meth_press(self, value):
-        # current_number = ''.join(self.)
-        pass
+    def math_press(self, value):
+        current_number = ''.join(self.display_nums)
+        if current_number:
+            self.full_operation.append(current_number)
+            if value != '=':
+                self.full_operation.append(value)
+                # clear the number list that hold the previous numbers so it will add the new numbers inthe lsit and add operation
+                # example here is 
+                '''
+                    # display_nums = 12
+                    # full_operation = [12, +]
+                    # now if you press the bymber again it will give the 
+                    # full_operation = [12, +, 12, +, 13] note - here the (12 + ) appears 
+                    # again so we need to clear the previous data
+                
+                '''
+                self.display_nums.clear() 
+                self.result_string.set("")
+                self.formula_string.set(str(' '.join(self.full_operation)))
+            else:
+                formula = " ".join(self.full_operation)
+                result = eval(formula)
+                
+                # Check the vlaue if float
+                if isinstance(result, float):
+
+                    # if the value is like int 4.0 or 1.0 then convert it to 4 or 1
+                    if result.is_integer():
+                        result = int(result)
+                    else:
+                        # convert the result upto the limit of 3
+                        result = round(result, 3)
+
+                # clear the full operation list
+                self.full_operation.clear()
+                self.display_nums = [str(result)]
+
+                # update the ouput
+                self.result_string.set(result)
+                self.formula_string.set(formula)
 
     def percent(self):
         print("Getting The Percent")
 
     def clear(self):
-        self.display_nums = []
-        self.result_string.set("")
+        self.display_nums.clear()
+        self.full_operation.clear()
+        self.result_string.set(0)
+        self.formula_string.set("")
 
 
 class OutputLabel(ctk.CTkLabel):
